@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^node --check public/app\\.js && node --check src/server\\.js$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

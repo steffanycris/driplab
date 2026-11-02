@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#131313">
+  <title>DripLab | Onde o estilo joga</title>
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/community.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+</head>
+<body>
+  <div class="topbar">FRETE GRÁTIS PARA TODO O BRASIL</div>
+  <header class="header">
+    <button class="search-toggle" aria-label="Buscar"><i class="fa-solid fa-magnifying-glass"></i> <span>O que você está buscando?</span></button>
+    <button class="logo" data-page="home" aria-label="DripLab - Ir para início"><img src="/assets/logo.png" alt="DripLab - Onde o estilo joga" class="logo-img"></button>
+    <div class="header-actions"><button data-page="account" id="accountButton"><i class="fa-regular fa-user"></i> Conta</button><button id="cartButton" aria-label="Carrinho"><i class="fa-solid fa-bag-shopping"></i> <b id="cartCount">0</b></button></div>
+  </header>
+  <nav class="nav" aria-label="Navegação principal">
+    <button data-page="home">INÍCIO</button><button data-page="about">SOBRE NÓS</button><button data-category="roupas">ROUPAS</button><button data-category="tenis">TÊNIS</button><button data-category="acessorios">ACESSÓRIOS</button><button data-category="conjuntos">CONJUNTOS</button><button data-category="imediato">ENVIO IMEDIATO</button>
+  </nav>
+  <main id="app"></main>
+  <aside id="cartDrawer" class="drawer" aria-label="Carrinho">
+    <div class="drawer-head"><h2><i class="fa-solid fa-bag-shopping"></i> Carrinho</h2><button class="icon-button" data-close-cart aria-label="Fechar carrinho"><i class="fa-solid fa-xmark"></i></button></div>
+    <div id="cartItems"></div>
+    <div class="cart-total"><span>Total</span><strong id="cartTotal">R$ 0,00</strong></div>
+    <button class="primary" id="checkoutButton">FINALIZAR COMPRA</button>
+    <button class="secondary" data-close-cart>CONTINUAR COMPRANDO</button>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+  <div class="modal-backdrop" id="feedbackModal" hidden>
+    <section class="feedback-modal" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
+      <button class="modal-close" data-close-modal aria-label="Fechar"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-icon" id="feedbackIcon"><i class="fa-solid fa-circle-check"></i></div>
+      <h2 id="feedbackTitle">Tudo certo!</h2>
+      <p id="feedbackMessage"></p>
+      <button class="primary" data-close-modal>CONTINUAR</button>
+    </section>
+  </div>
+  <footer class="footer">
+    <div><strong>BAIXE NOSSO APLICATIVO</strong><p class="stores"><a href="#" aria-label="App Store"><i class="fa-brands fa-apple"></i> App Store</a><a href="#" aria-label="Google Play"><i class="fa-brands fa-google-play"></i> Google Play</a></p></div>
+    <div><strong>CENTRAL DE ATENDIMENTO</strong><p><i class="fa-regular fa-clock"></i> seg. à sex. 10 às 18h<br><i class="fa-solid fa-phone"></i> (21) 97364-5644<br><i class="fa-regular fa-envelope"></i> suporte@driplab.com.br</p></div>
+    <div><strong>INFORMAÇÕES</strong><p>Termos de Serviço<br>Perguntas Frequentes<br>Política de Envio e Troca</p></div>
+    <div><strong>REDES SOCIAIS</strong><p class="social">
+  <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+  <a href="https://google.com" target="_blank" rel="noreferrer" aria-label="Google"><i class="fa-brands fa-google"></i></a>
+  <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+  <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
+</p></div>
+    <div><strong>FORMAS DE PAGAMENTO</strong><p class="payment-icons" aria-label="Visa, Mastercard e Pix"><i class="fa-brands fa-cc-visa"></i><i class="fa-brands fa-cc-mastercard"></i><i class="fa-brands fa-pix"></i></p></div>
+  </footer>
+  <script src="/app.js"></script>
+</body>
+</html>

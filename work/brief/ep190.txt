@@ -1,0 +1,402 @@
+
+===== PAGE 1 =====
+
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+          PLANO       DE    SITUAÇÃO          DE                                  
+                                                                                  
+                                                                                  
+          APRENDIZAGEM                                                            
+                                                                                  
+                                                                                  
+                                                                                  
+               Segmento                Desenvolvimento de Sistemas                
+                                                                                  
+          Unidade(s)          Projeto Integrador - Unindo todas as capacidades do 
+          curricular(es):     curso                                               
+                                                                                  
+          Curso(s):           Desenvolvimento de Sistemas                         
+                                                                                  
+          Instrutor (a):      [Nome do Instrutor]                                 
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+          ESTRATÉGIA       DE  APRENDIZAGEM         DESAFIADORA                   
+                                                                                  
+                                                                                  
+          ( ) Situação Problema ( X ) Projeto ( ) Pesquisa ( ) Estudo de Caso     
+                                                                                  
+          DESCRIÇÃO       DA  ESTRATÉGIA      DE   APRENDIZAGEM                   
+                                                                                  
+          DESAFIADORA                                                             
+                                                                                  
+                                                                                  
+          Contextualização:                                                       
+                                                                                  
+          No universo do streetwear e da moda urbana digital-first, as plataformas precisam
+          oferecer experiência imersiva, exclusividade e engajamento com a comunidade. A
+          DripLab é uma marca de streetwear digital-first que não quer ser apenas uma loja –
+                                                                                  
+          quer ser uma experiência completa. A marca opera com o conceito de drops
+          limitados e coleções exclusivas, misturando moda com cultura digital e elementos
+          de game.                                                                
+                                                                                  
+          A DripLab busca criar um ecossistema onde os usuários não apenas compram, mas
+                                                                                  
+          acompanham, interagem, votam em novas coleções, ganham recompensas e    
+          acessam conteúdos exclusivos. O produto precisa ter: catálogo de produtos
+          (roupas), sistema de "drop" (lançamentos limitados), interação com usuários
+          (comentários, votação), visual forte e identidade marcante, além de gamificação.
+                                                                                  
+          O público-alvo são jovens de 14 a 30 anos ligados em moda, cultura urbana e
+                                                                                  
+          internet, que buscam pertencimento, exclusividade e experiências imersivas.
+                                                                                  
+          O Projeto:                                                              
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+
+===== PAGE 2 =====
+
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+          A DripLab está prestes a lançar sua plataforma digital (site/app) e precisa de um
+          sistema completo e funcional. Você, como desenvolvedor(a), foi contratado para
+          desenvolver a solução completa da plataforma, abrangendo Front-end, Back-end e
+          Banco de Dados. O projeto deve entregar uma plataforma funcional, com telas
+                                                                                  
+          responsivas, regras de negócio implementadas e banco de dados integrado.
+                                                                                  
+          DESAFIO                                                                 
+                                                                                  
+                                                                                  
+          Executar o projeto completo de desenvolvimento de sistemas para a plataforma
+          DripLab, entregando:                                                    
+                                                                                  
+            1. Front-end: Interface de usuário com telas funcionais, layout responsivo,
+                                                                                  
+               design moderno e bem estruturado.                                  
+            2. Back-end: API para comunicação do sistema, regras de negócio       
+               implementadas, operações CRUD.                                     
+            3. Banco de Dados: Estrutura para armazenamento das informações do    
+                                                                                  
+               sistema, integração com o back-end.                                
+                                                                                  
+          Para ajudar na execução do projeto, realize as seguintes ações:         
+                                                                                  
+              Planejar e modelar o banco de dados da plataforma.                 
+              Criar e estruturar o banco de dados com tabelas normalizadas e migrações.
+                                                                                  
+              Desenvolver a API com operações CRUD para as entidades do sistema. 
+              Implementar as regras de negócio: Exemplo: sistema de drops com    
+               contagem regressiva, limite de peças por drop, sistema de votação para
+               novas coleções, gamificação (pontos, badges, níveis, recompensas), acesso
+                                                                                  
+               exclusivo baseado em níveis.                                       
+              Desenvolver interface para interação do usuário com o sistema      
+              Garantir layout responsivo que funcione em desktop, tablet e mobile.
+                                                                                  
+              Integrar front-end com back-end através de requisições HTTP (RESTful
+               API).                                                              
+              Organizar o código em repositório Git com README de instruções.    
+                                                                                  
+                                                                                  
+          RESULTADO/ENTREGAS             ESPERADOS                                
+                                                                                  
+            1. Front-end da Plataforma DripLab (acessível via navegador), contendo:
+                                                                                  
+                                                                                  
+                                                                                  
+               Desenvolvimento de uma interface web responsiva e interativa, acessível via
+               navegador, com foco na experiência do usuário, navegação fluida e  
+               visualização atrativa de produtos e conteúdo. O front-end deverá permitir a
+                                                                                  
+               interação com as principais funcionalidades da plataforma, incluindo
+               autenticação de usuários, exploração de catálogo de produtos,      
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+
+===== PAGE 3 =====
+
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+               acompanhamento de lançamentos e drops limitados, visualização de   
+               detalhes de produtos. As interfaces e funcionalidades deverão ser definidas e
+               refinadas pela equipe de desenvolvimento de acordo com o modelo de 
+               negócio proposto, permitindo flexibilidade na construção da experiência do
+                                                                                  
+               usuário e na evolução da plataforma.                               
+                                                                                  
+            2. Back-end da Plataforma DripLab (API documentada), contendo:        
+                Desenvolvimento de uma API RESTful responsável pela lógica da    
+                 aplicação, gerenciamento de dados e implementação das regras de  
+                                                                                  
+                 negócio definidas pelo sistema.                                  
+                A API deverá possibilitar a comunicação entre o front-end e o banco de
+                 dados, utilizando um framework de back-end adequado (como Node.js,
+                 Spring Boot, Django ou similar), garantindo organização, escalabilidade e
+                                                                                  
+                 boas práticas de desenvolvimento.                                
+                A API deverá suportar operações CRUD para as principais entidades do
+                 sistema, a serem definidas pela equipe durante a modelagem do banco de
+                 dados, como por exemplo: usuários, produtos, drops, pedidos, votações,
+                                                                                  
+                 comentários, pontos, badges e recompensas.                       
+                Os endpoints deverão ser estruturados de forma padronizada e     
+                 documentados com ferramentas como Swagger ou equivalente, facilitando
+                 a compreensão, integração e testes da API.                       
+                                                                                  
+                As regras de negócio, como controle de estoque por drop, sistema de
+                 pontos, níveis de acesso e validação de votos, deverão ser       
+                 implementadas conforme as decisões de modelagem da equipe,       
+                 garantindo sua integração com o banco de dados e com as requisições do
+                                                                                  
+                 front-end.                                                       
+                                                                                  
+            3. Banco de Dados da Plataforma DripLab (estrutura entregue via script SQL
+               ou migrations), contendo:                                          
+                                                                                  
+               O banco de dados deverá ser projetado e implementado com base no modelo
+                                                                                  
+               de negócio definido pela equipe, sendo entregue por meio de scripts SQL ou
+               migrations, de acordo com a tecnologia utilizada no projeto. O     
+               desenvolvimento deverá contemplar as seguintes etapas:             
+                                                                                  
+                Modelagem do banco de dados em três níveis:                      
+                                                                                  
+                 1. Conceitual: identificação das entidades e relacionamentos.    
+                 2. Lógica: definição da estrutura das tabelas e atributos.       
+                 3. Física: implementação do banco de dados em SQL ou migrations. 
+                b. Estruturação de tabelas normalizadas, garantindo integridade dos
+                                                                                  
+                 dados e definição correta de chaves primárias e estrangeiras.    
+                c. Integração com o back-end, permitindo comunicação entre API e banco
+                 de dados para operações CRUD.                                    
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+
+===== PAGE 4 =====
+
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                d. Podem ser utilizados recursos avançados do banco de dados, como
+                 JOINs, procedures ou triggers, para automação e otimização de    
+                 processos, de acordo com a necessidade do projeto.               
+                                                                                  
+          Observação: Todos os arquivos devem ser organizados em repositório Git. 
+                                                                                  
+          Entregar ao instrutor conforme prazo estabelecido.                      
+                                                                                  
+                                                                                  
+                                                                                  
+          PLANO    DE  SITUAÇÃO      DE  APRENDIZAGEM                             
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                  Critéri         
+            Capacidades (Taxonomia de                             o de            
+                                              Conhecimento                        
+                     Bloom)                                       Avalia          
+                                                                   ção            
+                                                                                  
+                                                                  Crític          
+                                                                   o              
+                                                                                  
+          Analisar os requisitos funcionais e Levantamento e análise de           
+          não funcionais da plataforma requisitos para e-commerce e X             
+                                                                                  
+          DripLab.                     gamificação.                               
+                                                                                  
+          Modelar o banco de dados     Modelagem de dados: DER,                   
+          identificando entidades, atributos e normalização, chaves X             
+          relacionamentos.             primárias/estrangeiras.                    
+                                                                                  
+          Implementar a estrutura do banco                                        
+                                       Linguagem SQL (DDL, DML,                   
+          de dados utilizando SQL ou                               X              
+                                       DQL) e ferramentas de migration.           
+          migrations.                                                             
+          Desenvolver API RESTful com  Construção de APIs com                     
+          operações CRUD para todas as framework (Node.js/Express, X              
+                                                                                  
+          entidades.                   Spring Boot, Django, .NET).                
+                                                                                  
+          Implementar as regras de negócio Lógica de programação aplicada         
+          da plataforma (drops limitados, a regras de negócio e    X              
+          pontuação, níveis, badges).  gamificação.                               
+                                                                                  
+                                       Desenvolvimento front-end                  
+          Construir interfaces de usuário                                         
+                                       (HTML, CSS, JavaScript,                    
+          responsivas e funcionais com design                      X              
+                                       framework como                             
+          streetwear.                                                             
+                                       React/Vue/Angular).                        
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+
+===== PAGE 5 =====
+
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+          Integrar front-end e back-end Consumo de APIs: fetch, axios,            
+                                                                   X              
+          através de requisições HTTP. async/await, tratamento de rotas.          
+                                                                                  
+          Documentar a API e o código fonte Documentação técnica: Swagger,        
+          para facilitar manutenção.   OpenAPI, README.                           
+                                                                                  
+          Organizar o código em repositório Controle de versão com Git:           
+                                                                   X              
+          Git com versionamento adequado. commits, branches, tags.                
+                                                                                  
+          Demonstrar iniciativa e proatividade                                    
+                                       Capacidades Sociais                        
+          na execução das atividades sob sua                       X              
+                                       (Autogestão).                              
+          responsabilidade.                                                       
+          Colaborar com a equipe na solução Capacidades Sociais (Trabalho         
+          de problemas de desenvolvimento. em equipe).                            
+                                                                                  
+          Integrar os princípios de qualidade                                     
+          (desempenho, usabilidade,    Capacidades Sociais (Qualidade             
+                                                                   X              
+          segurança) ao sistema        e Eficiência).                             
+          desenvolvido.                                                           
+                                                                                  
+                                                                                  
+                                                                                  
+          ESPECIFICAÇÕES         DOS   RECURSOS                                   
+                                                                                  
+                                                                                  
+              Tipo                       Especificação                            
+                                                                                  
+          Material de                                                             
+          Consumo:                                                                
+                                                                                  
+                                                                                  
+                       VS Code ou IDE similar; Git e GitHub/GitLab; Insomnia ou   
+                       Postman para testes de API; Swagger para documentação;     
+          Ferramentas: Framework front-end (React, Vue, Angular); Framework back- 
+                       end (Node.js/Express, Spring Boot, Django, .NET); SGBD     
+                                                                                  
+                       (MySQL, PostgreSQL, SQL Server, MongoDB).                  
+                                                                                  
+          EPIs:        Não se aplica.                                             
+                                                                                  
+          EPCs:        Não se aplica.                                             
+                                                                                  
+          Equipamento                                                             
+                       Computador com acesso à internet.                          
+          s:                                                                      
+                                                                                  
+          Instrumentos: Navegadores (Chrome, Firefox, Edge).                      
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+
+===== PAGE 6 =====
+
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                       Documentações oficiais das tecnologias escolhidas; Artigos 
+          Bibliografia: sobre API RESTful; Boas práticas de modelagem de dados;   
+                       Design de interfaces responsivas; Sistemas de gamificação. 
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+          Data: //______                                                          
+                                                                                  
+          Responsável pelo desenvolvimento: [Seu Nome]                            
+                                                                                  
+                                                                                  
+                                                                                  
+          Data: //______                                                          
+                                                                                  
+          Responsável pela validação: [Nome do Instrutor/Coordenador]             
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                  

@@ -1,0 +1,34 @@
+openapi: 3.0.3
+info:
+  title: DripLab API
+  version: 1.0.0
+  description: API REST para catálogo, drops, comunidade e pedidos da DripLab.
+servers:
+  - url: http://localhost:3000/api
+paths:
+  /products:
+    get:
+      summary: Lista produtos por categoria ou busca
+      responses: {'200': {description: Lista de produtos}}
+  /products/{id}:
+    get:
+      summary: Retorna um produto
+      parameters: [{name: id, in: path, required: true, schema: {type: integer}}]
+      responses: {'200': {description: Produto encontrado}}
+  /auth/register:
+    post:
+      summary: Cria uma conta
+      responses: {'201': {description: Conta criada}}
+  /auth/login:
+    post:
+      summary: Autentica e devolve JWT
+      responses: {'200': {description: Sessão criada}}
+  /orders:
+    get: {summary: Lista pedidos do usuário autenticado, responses: {'200': {description: Pedidos}}}
+    post: {summary: Cria pedido, responses: {'201': {description: Pedido criado}}}
+  /drops:
+    get: {summary: Lista drops, responses: {'200': {description: Drops}}}
+    post: {summary: Cria drop autenticado, responses: {'201': {description: Drop criado}}}
+  /votes:
+    get: {summary: Lista votos, responses: {'200': {description: Votos}}}
+    post: {summary: Vota em coleção autenticado, responses: {'201': {description: Voto registrado}}}
