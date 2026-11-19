@@ -18,9 +18,20 @@ const app = document.querySelector('#app');
 const searchInput = document.querySelector('#productSearch');
 searchInput.value = state.searchTerm;
 const money = (value) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
-const asset = (name) => `/assets/${encodeURIComponent(name)}`;
-const heroImage = '/assets/catalogo/colecao-driplab.webp';
-const teamImage = asset('WhatsApp Image 2026-10-26 at 7.58.55 AM.jpeg');
+const heroImage = '/assets/campanha/nova-linha-moletons.jpg';
+const campaignPhotos = [
+  ['looks-urbanos', 'Dois modelos com looks DripLab em frente ao muro grafitado.'],
+  ['camiseta-e-cargo', 'Modelo com camiseta estampada e calça cargo preta.'],
+  ['streetwear-no-banco', 'Dois modelos sentados em um banco com peças da coleção DripLab.'],
+  ['moletom-e-cargo', 'Modelo de moletom preto e calça cargo em frente a um portão grafitado.'],
+];
+const team = [
+  ['pedro-dutra', 'Pedro Dutra', 'Multimídia'],
+  ['isabella-avila', 'Isabella Ávila', 'Desenvolvimento de Sistemas'],
+  ['nicolas-menezes', 'Nicolas Menezes', 'Design Gráfico'],
+  ['steffany-cristina', 'Steffany Cristina', 'Desenvolvimento de Sistemas'],
+  ['igor-araujo', 'Igor Araújo', 'Jogos Digitais'],
+];
 
 async function fetchProducts(search = '') {
   const url = search ? `/api/products?${new URLSearchParams({ search })}` : '/api/products';
@@ -92,16 +103,81 @@ function navigate(page, data = null) {
 function headerActive() {
   document.querySelectorAll('[data-page],[data-category]').forEach((button) => button.classList.remove('active'));
   const selector = state.category ? `[data-category="${state.category}"]` : `[data-page="${state.page}"]`;
-  document.querySelector(selector)?.classList.add('active');
+  const active = document.querySelector(`.nav ${selector}`);
+  active?.classList.add('active');
 }
 
 function footerlessProduct(product) {
-  return `<article class="card"><button data-product="${product.id}"><img src="${product.image}" alt="${product.name}" loading="lazy"><h3>${product.name}</h3>${product.limitedEdition ? '<span class="edition">Edição limitada</span>' : ''}<p class="card-price">${money(product.price)}</p><p class="card-installments">Até 6x de <strong>${money(product.price / 6)}</strong></p></button></article>`;
+  return `<article class="card" data-product-category="${product.category}"><button data-product="${product.id}"><img src="${product.image}" alt="${product.name}" loading="lazy"><h3>${product.name}</h3>${product.limitedEdition ? '<span class="edition">Edição limitada</span>' : ''}<p class="card-price">${money(product.price)}</p><p class="card-installments">Até 6x de <strong>${money(product.price / 6)}</strong></p></button></article>`;
 }
 
 function home() {
   const drop = state.drops[0];
-  return `<section class="hero"><img class="hero-image" src="${heroImage}" alt="Camisetas e acessórios da coleção streetwear DripLab"><p class="tagline">A LOJA DE ROUPA MAIS HYPADA DO BRASIL</p>${drop ? `<section class="drop" data-drop-date="${drop.startsAt || ''}"><div><small>DROP LIMITADO</small><h2>${drop.name}</h2><p>${drop.limit} peças. Acesso exclusivo nível ${drop.accessLevel}.</p></div><strong class="countdown">${drop.startsAt ? '--:--:--' : 'EM BREVE'}</strong><button class="secondary" data-category="roupas">EXPLORAR DROP</button></section>` : ''}<div class="catalog-meta"><h2>DROP EM DESTAQUE</h2><button class="secondary" data-category="roupas">VER COLEÇÃO</button></div><div class="grid">${state.products.slice(0, 3).map(footerlessProduct).join('')}</div><section class="vote"><div><small>COMUNIDADE DRIPLAB</small><h2>Qual coleção deve ser o próximo drop?</h2><p>Vote e ganhe 100 pontos na sua conta.</p></div><button class="primary" id="voteButton"><i class="fa-solid fa-check-to-slot"></i> VOTAR EM PINK REBELLION</button></section></section>`;
+  const bestSellers = state.products.filter((product) => product.unitsSold > 0)
+    .sort((first, second) => second.unitsSold - first.unitsSold).slice(0, 3);
+  const featured = bestSellers.length ? bestSellers : state.products.slice(0, 3);
+  return `
+    <h1 class="campaign-banner"><img src="${heroImage}" width="1600" height="653" fetchpriority="high" alt="DripLab — Nova linha de moletons. Streetwear, identidade e atitude. Onde o estilo joga."></h1>
+    <p class="campaign-tagline">A LOJA DE ROUPA MAIS HYPADA DO BRASIL</p>
+    <section class="campaign-carousel" aria-label="Fotos da campanha DripLab">
+      <ol class="campaign-track" id="campaignTrack" tabindex="0" aria-label="Fotos da campanha. Use as setas para navegar.">
+        ${campaignPhotos.map(([name, alt]) => `<li><img src="/assets/campanha/${name}.webp" width="900" height="1200" alt="${alt}" loading="lazy"></li>`).join('')}
+      </ol>
+      <div class="campaign-controls">
+        <button type="button" data-carousel-step="-1" aria-controls="campaignTrack" aria-label="Foto anterior" disabled>‹</button>
+        ${campaignPhotos.map((_, index) => `<button type="button" data-carousel-slide="${index}" aria-controls="campaignTrack" aria-label="Ir para foto ${index + 1}" ${index === 0 ? 'aria-current="true"' : ''}><span aria-hidden="true"></span></button>`).join('')}
+        <button type="button" data-carousel-step="1" aria-controls="campaignTrack" aria-label="Próxima foto">›</button>
+      </div>
+    </section>
+    <div class="home-content">
+      <section class="home-featured">
+        <h2 class="section-title">${bestSellers.length ? 'MAIS VENDIDOS' : 'DESTAQUES DA COLEÇÃO'}</h2>
+        <div class="grid">${featured.map(footerlessProduct).join('')}</div>
+      </section>
+      ${drop ? `<section class="drop" data-drop-date="${drop.startsAt || ''}"><div><small>DROP LIMITADO</small><h2>${drop.name}</h2><p>${drop.limit} peças. Acesso exclusivo nível ${drop.accessLevel}.</p></div><strong class="countdown">${drop.startsAt ? '--:--:--' : 'EM BREVE'}</strong><button class="secondary" data-category="roupas">EXPLORAR DROP</button></section>` : ''}
+      <section class="vote"><div><small>COMUNIDADE DRIPLAB</small><h2>Qual coleção deve ser o próximo drop?</h2><p>Vote e ganhe 100 pontos na sua conta.</p></div><button class="primary" id="voteButton"><i class="fa-solid fa-check-to-slot"></i> VOTAR EM PINK REBELLION</button></section>
+    </div>`;
+}
+
+function bindCampaignCarousel() {
+  const track = document.querySelector('#campaignTrack');
+  if (!track) return;
+
+  const slides = [...track.children];
+  const dots = [...app.querySelectorAll('[data-carousel-slide]')];
+  const previous = app.querySelector('[data-carousel-step="-1"]');
+  const next = app.querySelector('[data-carousel-step="1"]');
+  let current = 0;
+
+  function update(index) {
+    current = index;
+    dots.forEach((dot, position) => {
+      if (position === index) dot.setAttribute('aria-current', 'true');
+      else dot.removeAttribute('aria-current');
+    });
+    previous.disabled = index === 0;
+    next.disabled = index === slides.length - 1;
+  }
+
+  function goTo(index) {
+    const target = Math.max(0, Math.min(index, slides.length - 1));
+    track.scrollLeft = slides[target].offsetLeft;
+    update(target);
+  }
+
+  previous.addEventListener('click', () => goTo(current - 1));
+  next.addEventListener('click', () => goTo(current + 1));
+  dots.forEach((dot, index) => dot.addEventListener('click', () => goTo(index)));
+  track.addEventListener('scroll', () => {
+    const distance = (index) => Math.abs(slides[index].offsetLeft - track.scrollLeft);
+    update(slides.reduce((nearest, _, index) => distance(index) < distance(nearest) ? index : nearest, 0));
+  }, { passive: true });
+  track.addEventListener('keydown', (event) => {
+    const targets = { ArrowLeft: current - 1, ArrowRight: current + 1, Home: 0, End: slides.length - 1 };
+    if (!Object.hasOwn(targets, event.key)) return;
+    event.preventDefault();
+    goTo(targets[event.key]);
+  });
 }
 
 const catalogTitles = {
@@ -121,7 +197,20 @@ function catalog() {
 }
 
 function about() {
-  return `<section class="about"><h1>SOBRE NÓS</h1><p>A <span class="pink">DripLab</span> é uma marca de streetwear digital-first criada para conectar moda, cultura urbana e inovação digital em uma experiência única. Mais do que oferecer produtos, buscamos construir uma comunidade em torno de estilo, identidade, exclusividade e pertencimento.</p><p>Nosso conceito parte da criação de drops limitados e coleções exclusivas, desenvolvidos para transformar cada lançamento em um momento de descoberta e interação.</p><div class="team">${[1, 2, 3, 4].map((number) => `<img src="${teamImage}" alt="Comunidade DripLab ${number}">`).join('')}</div></section>`;
+  return `<section class="about">
+    <h1>SOBRE NÓS</h1>
+    <div class="about-copy">
+      <p>A <span class="pink">DripLab</span> é uma marca de streetwear digital-first criada para conectar moda, cultura urbana e inovação digital em uma experiência única. Mais do que oferecer produtos, buscamos construir uma comunidade em torno de estilo, identidade, exclusividade e pertencimento.</p>
+      <p>Nosso conceito parte da criação de drops limitados e coleções exclusivas, desenvolvidos para transformar cada lançamento em um momento de descoberta e interação. Acreditamos que a moda vai além daquilo que vestimos: ela representa personalidade, referências culturais e a maneira como cada pessoa se expressa no mundo.</p>
+    </div>
+    <div class="team">
+      ${team.map(([image, name, role]) => `
+        <figure>
+          <img src="/assets/equipe/${image}.webp" width="420" height="456" alt="">
+          <figcaption><strong>${name}</strong><span>${role}</span></figcaption>
+        </figure>`).join('')}
+    </div>
+  </section>`;
 }
 
 function productPage(product) {
@@ -154,6 +243,8 @@ function confirmation() {
 
 function render() {
   headerActive();
+  app.classList.toggle('home-page', state.page === 'home');
+  app.classList.toggle('about-page', state.page === 'about');
   if (state.page === 'catalog' || state.page === 'search') {
     app.innerHTML = catalog();
     if (state.page === 'search') document.querySelector('#searchTerm').textContent = `“${state.searchTerm}”`;
@@ -171,7 +262,7 @@ function render() {
 function renderCart() {
   const count = state.cart.reduce((sum, item) => sum + item.quantity, 0);
   const total = state.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  document.querySelector('#cartCount').textContent = count;
+  document.querySelector('#cartCount').textContent = count || '';
   document.querySelector('#cartTotal').textContent = money(total);
   document.querySelector('#cartItems').innerHTML = state.cart.length ? state.cart.map((item, index) => `<article class="cart-row"><img src="${item.image}" alt="${item.name}"><div><h4>${item.name}</h4><p>${item.size} · ${money(item.price)}</p><div class="quantity"><button data-quantity="${index}" data-change="-1" aria-label="Diminuir quantidade"><i class="fa-solid fa-minus"></i></button><strong>${item.quantity}</strong><button data-quantity="${index}" data-change="1" aria-label="Aumentar quantidade"><i class="fa-solid fa-plus"></i></button></div></div><button class="remove-item" data-remove="${index}" aria-label="Remover ${item.name}"><i class="fa-solid fa-trash"></i></button></article>`).join('') : '<p class="empty">Seu carrinho está vazio.</p>';
 }
@@ -200,6 +291,7 @@ function bindPage() {
   document.querySelector('#reviewForm')?.addEventListener('submit', submitReview);
   if (state.page === 'product' && state.product) loadReviews(state.product.id);
   if (state.page === 'account' && state.token && !state.ordersLoaded) loadOrders();
+  bindCampaignCarousel();
   clearInterval(window.dripTimer);
   startCountdown();
 }

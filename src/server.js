@@ -55,9 +55,14 @@ app.get('/api/products', async (req, res) => {
     const rows = await query(`
       SELECT p.id, p.name, c.slug AS category, p.price,
              p.image_url AS image, p.description, p.limited_edition AS limitedEdition,
-             c.name AS category_name
+             c.name AS category_name, COALESCE(sales.units, 0) AS unitsSold
       FROM products p
       JOIN categories c ON p.category_id = c.id
+      LEFT JOIN (
+        SELECT product_id, SUM(quantity) AS units
+        FROM order_items
+        GROUP BY product_id
+      ) sales ON sales.product_id = p.id
       WHERE p.active = 1 ${category ? 'AND c.slug = ?' : ''}
       ORDER BY p.id`, category ? [category] : []);
     const products = [];
