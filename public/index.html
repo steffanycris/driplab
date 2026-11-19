@@ -16,7 +16,10 @@
 <body>
   <div class="topbar">FRETE GRÁTIS PARA TODO O BRASIL</div>
   <header class="header">
-    <button class="search-toggle" aria-label="Buscar"><i class="fa-solid fa-magnifying-glass"></i> <span>O que você está buscando?</span></button>
+    <form class="search-form" role="search" action="/" method="get">
+      <input id="productSearch" name="search" type="search" aria-label="Buscar produtos" placeholder="Buscar produtos" autocomplete="off" required>
+      <button type="submit" aria-label="Pesquisar"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></button>
+    </form>
     <button class="logo" data-page="home" aria-label="DripLab - Ir para início"><img src="/assets/logo.png" alt="DripLab - Onde o estilo joga" class="logo-img"></button>
     <div class="header-actions"><button data-page="account" id="accountButton"><i class="fa-regular fa-user"></i> Conta</button><button id="cartButton" aria-label="Carrinho"><i class="fa-solid fa-bag-shopping"></i> <b id="cartCount">0</b></button></div>
   </header>

@@ -6,22 +6,27 @@ const state = {
   user: JSON.parse(localStorage.getItem('driplab-user') || 'null'),
   token: localStorage.getItem('driplab-token'),
   products: [],
+  searchTerm: new URLSearchParams(window.location.search).get('search')?.trim() || '',
+  searchResults: [],
+  productOrigin: 'home',
   drops: [],
   orders: [],
   ordersLoaded: false,
 };
 
 const app = document.querySelector('#app');
+const searchInput = document.querySelector('#productSearch');
+searchInput.value = state.searchTerm;
 const money = (value) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
 const asset = (name) => `/assets/${encodeURIComponent(name)}`;
-const heroImage = asset('WhatsApp Image 2026-10-26 at 7.58.42 AM.jpeg');
+const heroImage = '/assets/catalogo/colecao-driplab.webp';
 const teamImage = asset('WhatsApp Image 2026-10-26 at 7.58.55 AM.jpeg');
 
-async function fetchProducts(category) {
-  const url = category && category !== 'imediato' ? `/api/products?category=${encodeURIComponent(category)}` : '/api/products';
+async function fetchProducts(search = '') {
+  const url = search ? `/api/products?${new URLSearchParams({ search })}` : '/api/products';
   const response = await fetch(url);
   if (!response.ok) throw new Error('Não foi possível carregar os produtos.');
-  state.products = await response.json();
+  return response.json();
 }
 
 function normalizeDrop(drop) {
@@ -71,6 +76,12 @@ function orderItemProduct(item) {
 }
 
 function navigate(page, data = null) {
+  if (page === 'product') state.productOrigin = state.page;
+  if (state.searchTerm && page !== 'search' && !(page === 'product' && state.productOrigin === 'search')) {
+    history.replaceState(null, '', '/');
+    state.searchTerm = '';
+    searchInput.value = '';
+  }
   state.page = page;
   state.category = data?.category ?? (page === 'catalog' ? state.category : null);
   state.product = data?.product || null;
@@ -85,18 +96,28 @@ function headerActive() {
 }
 
 function footerlessProduct(product) {
-  return `<article class="card"><button data-product="${product.id}"><img src="${product.image}" alt="${product.name}"><h3>${product.name}</h3><p>${money(product.price)}</p></button></article>`;
+  return `<article class="card"><button data-product="${product.id}"><img src="${product.image}" alt="${product.name}" loading="lazy"><h3>${product.name}</h3>${product.limitedEdition ? '<span class="edition">Edição limitada</span>' : ''}<p class="card-price">${money(product.price)}</p><p class="card-installments">Até 6x de <strong>${money(product.price / 6)}</strong></p></button></article>`;
 }
 
 function home() {
   const drop = state.drops[0];
-  return `<section class="hero"><img class="hero-image" src="${heroImage}" alt="DripLab nova linha de moletons"><p class="tagline">A LOJA DE ROUPA MAIS HYPADA DO BRASIL</p>${drop ? `<section class="drop" data-drop-date="${drop.startsAt || ''}"><div><small>DROP LIMITADO</small><h2>${drop.name}</h2><p>${drop.limit} peças. Acesso exclusivo nível ${drop.accessLevel}.</p></div><strong class="countdown">${drop.startsAt ? '--:--:--' : 'EM BREVE'}</strong><button class="secondary" data-category="roupas">EXPLORAR DROP</button></section>` : ''}<div class="catalog-meta"><h2>DROP EM DESTAQUE</h2><button class="secondary" data-category="roupas">VER COLEÇÃO</button></div><div class="grid">${state.products.slice(0, 3).map(footerlessProduct).join('')}</div><section class="vote"><div><small>COMUNIDADE DRIPLAB</small><h2>Qual coleção deve ser o próximo drop?</h2><p>Vote e ganhe 100 pontos na sua conta.</p></div><button class="primary" id="voteButton"><i class="fa-solid fa-check-to-slot"></i> VOTAR EM PINK REBELLION</button></section></section>`;
+  return `<section class="hero"><img class="hero-image" src="${heroImage}" alt="Camisetas e acessórios da coleção streetwear DripLab"><p class="tagline">A LOJA DE ROUPA MAIS HYPADA DO BRASIL</p>${drop ? `<section class="drop" data-drop-date="${drop.startsAt || ''}"><div><small>DROP LIMITADO</small><h2>${drop.name}</h2><p>${drop.limit} peças. Acesso exclusivo nível ${drop.accessLevel}.</p></div><strong class="countdown">${drop.startsAt ? '--:--:--' : 'EM BREVE'}</strong><button class="secondary" data-category="roupas">EXPLORAR DROP</button></section>` : ''}<div class="catalog-meta"><h2>DROP EM DESTAQUE</h2><button class="secondary" data-category="roupas">VER COLEÇÃO</button></div><div class="grid">${state.products.slice(0, 3).map(footerlessProduct).join('')}</div><section class="vote"><div><small>COMUNIDADE DRIPLAB</small><h2>Qual coleção deve ser o próximo drop?</h2><p>Vote e ganhe 100 pontos na sua conta.</p></div><button class="primary" id="voteButton"><i class="fa-solid fa-check-to-slot"></i> VOTAR EM PINK REBELLION</button></section></section>`;
 }
 
+const catalogTitles = {
+  roupas: 'ROUPAS',
+  tenis: 'TÊNIS',
+  acessorios: 'ACESSÓRIOS',
+  conjuntos: 'CONJUNTOS',
+  imediato: 'ENVIO IMEDIATO',
+};
+
 function catalog() {
-  const title = state.category === 'imediato' ? 'ENVIO IMEDIATO' : state.category.toUpperCase().replace('ACESSORIOS', 'ACESSÓRIOS').replace('TENIS', 'TÊNIS');
-  const products = state.category === 'imediato' ? state.products : state.products.filter((product) => product.category === state.category);
-  return `<section><div class="catalog-meta"><div><h1>${title}</h1><span>${products.length} produtos</span></div></div><div class="grid">${products.map(footerlessProduct).join('') || '<p>Nenhum produto nesta coleção por enquanto.</p>'}</div></section>`;
+  const isSearch = state.page === 'search';
+  const title = isSearch ? 'RESULTADOS DA BUSCA' : catalogTitles[state.category];
+  const products = isSearch ? state.searchResults : state.products.filter((product) => product.category === state.category);
+  const emptyMessage = isSearch ? 'Nenhum produto encontrado. Tente outro termo.' : 'Nenhum produto nesta coleção por enquanto.';
+  return `<section class="catalog"><div class="catalog-meta"><h1>${title}</h1>${isSearch ? '<p class="search-term" id="searchTerm"></p>' : ''}<span>${products.length} ${products.length === 1 ? 'produto' : 'produtos'}</span></div>${products.length ? `<div class="grid">${products.map(footerlessProduct).join('')}</div>` : `<p class="empty">${emptyMessage}</p>`}</section>`;
 }
 
 function about() {
@@ -105,7 +126,7 @@ function about() {
 
 function productPage(product) {
   if (!product) return home();
-  return `<section><button class="back" data-page="${state.category ? 'catalog' : 'home'}"><i class="fa-solid fa-arrow-left"></i> Voltar</button><div class="product"><div class="product-media"><img src="${product.image}" alt="${product.name}"></div><div><p class="rating" id="productRating"><span class="stars-placeholder"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></span> <span>(carregando avaliações)</span></p><h1>${product.name}</h1><p class="price">${money(product.price)}</p><p class="installments"><i class="fa-regular fa-credit-card"></i> em até 6x de ${money(product.price / 6)}</p><strong>Tamanhos:</strong><div class="sizes">${product.sizes.map((size, index) => `<button class="${index === 0 ? 'selected' : ''}" data-size="${size}">${size}</button>`).join('')}</div><button class="primary" data-add="${product.id}"><i class="fa-solid fa-bag-shopping"></i> ADICIONAR AO CARRINHO</button></div></div><section class="reviews" data-review-product="${product.id}"><div class="reviews-heading"><h2>Avaliações</h2><span id="reviewSummary">Carregando...</span></div><div id="reviewList" class="review-list"></div>${state.user ? `<form id="reviewForm" class="review-form"><h3>Deixe sua avaliação</h3><div class="rating-input" role="radiogroup" aria-label="Nota"><label><input type="radio" name="rating" value="1" required><i class="fa-solid fa-star"></i></label><label><input type="radio" name="rating" value="2"><i class="fa-solid fa-star"></i></label><label><input type="radio" name="rating" value="3"><i class="fa-solid fa-star"></i></label><label><input type="radio" name="rating" value="4"><i class="fa-solid fa-star"></i></label><label><input type="radio" name="rating" value="5"><i class="fa-solid fa-star"></i></label></div><label class="field">Seu comentário<textarea name="body" minlength="3" maxlength="1000" required placeholder="Conte o que achou do produto"></textarea></label><button class="primary">PUBLICAR AVALIAÇÃO</button></form>` : '<p class="review-login">Faça login para avaliar este produto.</p>'}</section></section>`;
+  return `<section><button class="back" data-page="${state.productOrigin}"><i class="fa-solid fa-arrow-left"></i> Voltar</button><div class="product"><div class="product-media"><img src="${product.image}" alt="${product.name}"></div><div><p class="rating" id="productRating"><span class="stars-placeholder"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></span> <span>(carregando avaliações)</span></p><h1>${product.name}</h1>${product.limitedEdition ? '<span class="edition">Edição limitada</span>' : ''}<p>${product.description || ''}</p><p class="price">${money(product.price)}</p><p class="installments"><i class="fa-regular fa-credit-card"></i> em até 6x de ${money(product.price / 6)}</p><strong>Tamanhos:</strong><div class="sizes">${product.sizes.map((size, index) => `<button class="${index === 0 ? 'selected' : ''}" data-size="${size}">${size}</button>`).join('')}</div><button class="primary" data-add="${product.id}"><i class="fa-solid fa-bag-shopping"></i> ADICIONAR AO CARRINHO</button></div></div><section class="reviews" data-review-product="${product.id}"><div class="reviews-heading"><h2>Avaliações</h2><span id="reviewSummary">Carregando...</span></div><div id="reviewList" class="review-list"></div>${state.user ? `<form id="reviewForm" class="review-form"><h3>Deixe sua avaliação</h3><div class="rating-input" role="radiogroup" aria-label="Nota"><label><input type="radio" name="rating" value="1" required><i class="fa-solid fa-star"></i></label><label><input type="radio" name="rating" value="2"><i class="fa-solid fa-star"></i></label><label><input type="radio" name="rating" value="3"><i class="fa-solid fa-star"></i></label><label><input type="radio" name="rating" value="4"><i class="fa-solid fa-star"></i></label><label><input type="radio" name="rating" value="5"><i class="fa-solid fa-star"></i></label></div><label class="field">Seu comentário<textarea name="body" minlength="3" maxlength="1000" required placeholder="Conte o que achou do produto"></textarea></label><button class="primary">PUBLICAR AVALIAÇÃO</button></form>` : '<p class="review-login">Faça login para avaliar este produto.</p>'}</section></section>`;
 }
 
 function auth(type) {
@@ -133,7 +154,10 @@ function confirmation() {
 
 function render() {
   headerActive();
-  if (state.page === 'catalog') app.innerHTML = catalog();
+  if (state.page === 'catalog' || state.page === 'search') {
+    app.innerHTML = catalog();
+    if (state.page === 'search') document.querySelector('#searchTerm').textContent = `“${state.searchTerm}”`;
+  }
   else if (state.page === 'about') app.innerHTML = about();
   else if (state.page === 'product') app.innerHTML = productPage(state.product);
   else if (state.page === 'login' || state.page === 'register') app.innerHTML = auth(state.page);
@@ -176,6 +200,7 @@ function bindPage() {
   document.querySelector('#reviewForm')?.addEventListener('submit', submitReview);
   if (state.page === 'product' && state.product) loadReviews(state.product.id);
   if (state.page === 'account' && state.token && !state.ordersLoaded) loadOrders();
+  clearInterval(window.dripTimer);
   startCountdown();
 }
 
@@ -276,7 +301,6 @@ function startCountdown() {
     node.textContent = `${String(Math.floor(gap / 3600000)).padStart(2, '0')}:${String(Math.floor(gap / 60000) % 60).padStart(2, '0')}:${String(Math.floor(gap / 1000) % 60).padStart(2, '0')}`;
   };
   update();
-  clearInterval(window.dripTimer);
   window.dripTimer = setInterval(update, 1000);
 }
 
@@ -302,18 +326,22 @@ document.querySelector('#feedbackModal').addEventListener('click', (event) => {
   if (event.target.id === 'feedbackModal') closeFeedback();
 });
 
-document.querySelector('.search-toggle').addEventListener('click', async () => {
-  const term = prompt('O que você está buscando?');
-  if (!term) return;
-  state.products = await fetch(`/api/products?search=${encodeURIComponent(term)}`).then((response) => response.json());
-  navigate('catalog', { category: 'imediato' });
-});
-
 (async function init() {
   try {
-    await Promise.all([fetchProducts(), fetch('/api/drops').then((response) => response.json()).then((data) => { state.drops = data.map(normalizeDrop); })]);
+    const [products, drops, searchResults] = await Promise.all([
+      fetchProducts(),
+      fetch('/api/drops').then((response) => response.json()),
+      state.searchTerm ? fetchProducts(state.searchTerm) : [],
+    ]);
+    state.products = products;
+    state.drops = drops.map(normalizeDrop);
+    if (state.searchTerm) {
+      state.page = 'search';
+      state.searchResults = searchResults;
+    }
+    state.cart = state.cart.filter((item) => productById(item.id)?.image === item.image);
+    saveCart();
     render();
-    renderCart();
   } catch (error) {
     app.innerHTML = `<section class="confirmation"><h1>Não foi possível carregar a loja</h1><p>${error.message}</p></section>`;
   }

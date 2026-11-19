@@ -41,30 +41,33 @@ app.get('/api/health', async (_req, res) => {
 });
 
 // ==================== Produtos ====================
+function normalizeSearch(value) {
+  return value.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+}
+
 app.get('/api/products', async (req, res) => {
   try {
-    const category = req.query.category;
-    const search = (req.query.search || '').toLowerCase();
-    let sql = `
+    const { category, search = '' } = req.query;
+    if (typeof search !== 'string' || (category !== undefined && typeof category !== 'string')) {
+      return res.status(400).json({ error: 'Filtros de produto inválidos.' });
+    }
+    const terms = normalizeSearch(search).trim().split(/\s+/).filter(Boolean);
+    const rows = await query(`
       SELECT p.id, p.name, c.slug AS category, p.price,
-             p.image_url AS image, p.description
+             p.image_url AS image, p.description, p.limited_edition AS limitedEdition,
+             c.name AS category_name
       FROM products p
-      JOIN categories c ON p.category_id = c.id`;
-    const params = [];
-    if (category) {
-      params.push(category);
-      sql += ` WHERE c.slug = ?`;
+      JOIN categories c ON p.category_id = c.id
+      WHERE p.active = 1 ${category ? 'AND c.slug = ?' : ''}
+      ORDER BY p.id`, category ? [category] : []);
+    const products = [];
+    for (const { category_name, ...product } of rows) {
+      const searchable = normalizeSearch(`${product.name} ${category_name} ${product.description || ''}`);
+      if (!terms.every((term) => searchable.includes(term))) continue;
+      const sizes = await query('SELECT size FROM product_sizes WHERE product_id = ? ORDER BY id', [product.id]);
+      products.push({ ...product, sizes: sizes.map(({ size }) => size) });
     }
-    if (search) {
-      params.push(`%${search}%`);
-      sql += category ? ` AND LOWER(p.name) LIKE ?` : ` WHERE LOWER(p.name) LIKE ?`;
-    }
-    const rows = await query(sql, params);
-    for (const row of rows) {
-      const sizes = await query('SELECT size FROM product_sizes WHERE product_id = ?', [row.id]);
-      row.sizes = sizes.map(s => s.size);
-    }
-    res.json(rows);
+    res.json(products);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -74,13 +77,13 @@ app.get('/api/products/:id', async (req, res) => {
   try {
     const rows = await query(`
       SELECT p.id, p.name, c.slug AS category, p.price,
-             p.image_url AS image, p.description
+             p.image_url AS image, p.description, p.limited_edition AS limitedEdition
       FROM products p
       JOIN categories c ON p.category_id = c.id
-      WHERE p.id = ?`, [req.params.id]);
+      WHERE p.id = ? AND p.active = 1`, [req.params.id]);
     const product = rows[0];
     if (!product) return res.status(404).json({ error: 'Produto não encontrado.' });
-    const sizes = await query('SELECT size FROM product_sizes WHERE product_id = ?', [product.id]);
+    const sizes = await query('SELECT size FROM product_sizes WHERE product_id = ? ORDER BY id', [product.id]);
     product.sizes = sizes.map(s => s.size);
     res.json(product);
   } catch (e) {
@@ -213,7 +216,7 @@ app.post('/api/orders', authMiddleware, async (req, res) => {
     for (const item of items) {
       if (!Number.isInteger(Number(item.productId)) || !Number.isInteger(Number(item.quantity)) || Number(item.quantity) < 1 || !item.size)
         return res.status(400).json({ error: 'Item de pedido inválido.' });
-      const prodRows = await query('SELECT price FROM products WHERE id = ?', [item.productId]);
+      const prodRows = await query('SELECT price FROM products WHERE id = ? AND active = 1', [item.productId]);
       if (!prodRows.length) return res.status(400).json({ error: 'Um dos produtos não está disponível.' });
       total += (prodRows[0]?.price || 0) * item.quantity;
     }
@@ -224,7 +227,7 @@ app.post('/api/orders', authMiddleware, async (req, res) => {
     );
     const orderId = result[0].id;
     for (const item of items) {
-      const prodRows = await query('SELECT price FROM products WHERE id = ?', [item.productId]);
+      const prodRows = await query('SELECT price FROM products WHERE id = ? AND active = 1', [item.productId]);
       await query(
         `INSERT INTO order_items (order_id, product_id, size, quantity, unit_price)
          VALUES (?, ?, ?, ?, ?)`,

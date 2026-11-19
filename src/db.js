@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
+const { updateCatalog } = require('./catalog');
 
 // Caminho do arquivo SQLite.
 const DATA_DIR = path.join(__dirname, '..', 'data');
@@ -273,41 +274,6 @@ async function initDatabase() {
     await db.run("INSERT INTO categorias (nome, descricao) VALUES ('Acessórios', 'Bonés, relógios e correntes')");
     await db.run("INSERT INTO categorias (nome, descricao) VALUES ('Conjuntos', 'Looks completos DripLab')");
 
-    // Produtos (imagens dos assets do projeto)
-    const products = [
-      [1, 'Moletom Hoodie Venom',    'Moletom oversized com estampa Venom. Tecido premium, capuz forrado.',        229.90, 50, '/assets/WhatsApp Image 2026-10-26 at 7.58.42 AM.jpeg'],
-      [1, 'Camiseta DripLab Wildcard','Camiseta 100% algodão com estampa exclusiva DripLab Wildcard.',             129.90, 80, '/assets/WhatsApp Image 2026-10-26 at 7.58.53 AM.jpeg'],
-      [1, 'Jaqueta Corta-Vento Urban','Jaqueta corta-vento leve com forro em mesh. Perfeita para o dia a dia.',    349.90, 30, '/assets/WhatsApp Image 2026-10-26 at 7.58.53 AM (1).jpeg'],
-      [2, 'Tênis DripLab Runner',     'Sneaker leve com solado em EVA e design futurista.',                        459.90, 40, '/assets/WhatsApp Image 2026-10-26 at 7.58.54 AM.jpeg'],
-      [2, 'Tênis High Street Pro',    'Cano alto, couro sintético premium e palmilha memory foam.',                529.90, 25, '/assets/WhatsApp Image 2026-10-26 at 7.58.54 AM (1).jpeg'],
-      [3, 'Boné DripLab Classic',     'Boné aba reta com bordado DripLab. Ajuste snapback.',                        89.90, 120,'/assets/WhatsApp Image 2026-10-26 at 7.58.55 AM.jpeg'],
-      [3, 'Corrente Pingente Drip',   'Corrente banhada a ouro 18k com pingente DripLab exclusivo.',               199.90, 60, '/assets/WhatsApp Image 2026-10-26 at 7.58.55 AM (1).jpeg'],
-      [4, 'Conjunto Moletom + Calça', 'Conjunto streetwear completo: moletom e calça jogger combinando.',          399.90, 35, '/assets/WhatsApp Image 2026-10-26 at 7.58.56 AM.jpeg'],
-      [4, 'Conjunto Verão DripLab',   'Bermuda + regata com estampa tropical DripLab.',                            259.90, 45, '/assets/WhatsApp Image 2026-10-26 at 7.58.56 AM (1).jpeg'],
-      [1, 'Camiseta Oversized Black', 'Camiseta oversized preta com logo DripLab nas costas.',                     149.90, 70, '/assets/WhatsApp Image 2026-10-26 at 7.58.57 AM.jpeg'],
-    ];
-    for (const [catId, name, desc, price, stock, img] of products) {
-      await db.run(
-        'INSERT INTO products (category_id, name, description, price, stock, image_url) VALUES (?, ?, ?, ?, ?, ?)',
-        [catId, name, desc, price, stock, img]
-      );
-    }
-
-    // Tamanhos dos produtos
-    const sizes = ['P', 'M', 'G', 'GG'];
-    const shoeSizes = ['38', '39', '40', '41', '42', '43'];
-    const accessorySizes = ['Único'];
-    const productCount = products.length;
-    for (let i = 1; i <= productCount; i++) {
-      let productSizes;
-      if (i >= 4 && i <= 5) productSizes = shoeSizes;        // Tênis
-      else if (i >= 6 && i <= 7) productSizes = accessorySizes; // Acessórios
-      else productSizes = sizes;                              // Roupas e conjuntos
-      for (const s of productSizes) {
-        await db.run('INSERT INTO product_sizes (product_id, size, stock) VALUES (?, ?, ?)', [i, s, 20]);
-      }
-    }
-
     // Drop inicial
     const tomorrow = new Date(Date.now() + 86400000).toISOString();
     const nextWeek = new Date(Date.now() + 7 * 86400000).toISOString();
@@ -337,6 +303,8 @@ async function initDatabase() {
 
     console.log('✓ Banco de dados populado com dados iniciais.');
   }
+
+  await updateCatalog(db);
 }
 
 module.exports = {
